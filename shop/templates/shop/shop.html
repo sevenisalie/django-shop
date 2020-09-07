@@ -1,0 +1,26 @@
+{% extends 'shop/home.html' %}
+{% load static %}
+
+
+
+{% block content %}
+<div class="row d-flex justify-content-center">
+
+{% for product in products %}
+  <div class="col-md-4 px-3 py-3">
+    <div class="card" style="width: 18rem; height: 24rem;">
+  <img class="card-img-top" src="{{product.imageURL}}" alt="Card image cap">
+  <div class="card-body">
+    <h5 class="card-title">{{product.name}} - <lead> ${{product.price|floatformat:2}} </lead> </h5>
+    <p class="card-text">{{product.description}}</p>
+    <a href="#" class="btn btn-primary">Add to Cart</a>
+    <a href="#" class="btn btn-secondary"> View </a>
+  </div>
+</div>
+  </div>
+{% endfor %}
+
+
+
+</div>
+{% endblock %}
