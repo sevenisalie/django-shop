@@ -22,7 +22,7 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
-    @property                               #little decorator thingy. idk just do it
+    @property                               #little decorator thingy allows you to make queries within your model class so that you can call on it as an object of the class in your views. see lines 24-30 in views.py
     def imageURL(self):                     #this little number is a fix for our shop page incase a product doesnt have an image.
         try:
             url = self.image.url
@@ -41,10 +41,20 @@ class Order(models.Model):
         return str(self.id)
 
     @property
+    def shipping(self):
+        shipping = False
+        orderitems = self.orderitem_set.all()
+        for i in orderitems:
+            if i.product.digital == False:
+                shipping = True
+        return shipping
+
+    @property
     def get_cart_total(self):
         orderitems = self.orderitem_set.all()
         total = sum([item.get_total for item in orderitems])
         return total
+
     @property
     def get_cart_items(self):
         orderitems = self.orderitem_set.all()
@@ -52,11 +62,11 @@ class Order(models.Model):
         return total
 
 
-
 class OrderItem(models.Model):                          #aka the cart
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=True)                     #create a many to one relationship between Order and Customer. many Customer attributes to one order
     order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True, blank=True)
     quantity = models.IntegerField(default=0, null=True, blank=True)
+    date_added = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.product.name
